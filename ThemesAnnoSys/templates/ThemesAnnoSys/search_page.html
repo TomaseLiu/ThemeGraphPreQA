@@ -1,0 +1,76 @@
+{% extends "ThemesAnnoSys/base_task.html" %}
+
+{% block title %}
+	{{ theme_name }}主题搜索
+{% endblock %}
+	{% block path %}
+		<li>
+			<a href="#">任务列表</a>
+		</li>
+		<li>
+			<a href="{% url 'ThemesAnnoSys:outline' %}">主题标注</a>
+		</li>
+		<li class="active">
+			搜索
+		</li>
+	{% endblock %}
+
+	{% block discription %}
+		<h2> 主题: {{ theme_name }}</h2>
+		<h3> 关键词: {{ key_word }}</h3>
+		<h4> 搜索结果数/总数：{{ article_search_result_count }}/{{theme_article_count}}</h4>
+		<hr>
+	{% endblock %}
+
+	{% block content %}
+	<style type="text/css">
+		highlight {background-color: yellow}
+		highlight_red {background-color: red}
+		highlight_resh {background-color: #ffd700}
+		highlight_comm {background-color: #ffff00}
+		highlight_zheshang {background-color: #ff8c00}
+		highlight_comp {background-color: #ffc0cb}
+	</style>
+		{% for article in paginator_article_list %}
+		<div class="row">
+			<div class="col-md-10">
+				<div class="archive">
+					<div class="archive">
+						<header class="entry-header">
+								<div class="entry-info">
+									<h3 class="entry-title">{{article.title}}</h3>
+									<span class="entry-date">
+										<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+										{{article.pub_time_src}}
+									</span>
+									<span class="author vcard">
+										<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+											{{ article.file_name }}
+									</span>	
+								</div>
+						</header>
+						<br><br>
+						<div>
+							{{ article.body|safe }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<a class="btn btn-success" href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id article.index %}" data-toggle="tooltip" title="click">去标注</a>
+			</div>
+		</div>
+		<hr>
+		{% endfor %}
+		<p>
+		{% if paginator_article_list.has_previous %}
+		<a href="{% url 'ThemesAnnoSys:search_by_word' theme_name version_id key_word paginator_article_list.previous_page_number %}">Previous</a>
+		{% endif %}
+		Page {{ paginator_article_list.number }} of {{ paginator_article_list.paginator.num_pages }}.
+		{% if paginator_article_list.has_next %}
+		<a href="{% url 'ThemesAnnoSys:search_by_word' theme_name version_id key_word paginator_article_list.next_page_number %}">Next</a>
+		{% endif %}
+		</p>
+		{% endblock %}
+
+

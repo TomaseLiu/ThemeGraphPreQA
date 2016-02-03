@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>
+			{% block title %}
+			{% endblock %}
+		</title>
+		<!--
+		<link href="{{ STATIC_URL }}lib/boostrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{{ STATIC_URL }}lib/bootstap/css/font-awesome.min.css" rel="stylesheet">
+		<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+		-->
+		<link rel="stylesheet" type="text/css" href="{% static 'ThemesAnnoSys/bootstrap.css'%}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'ThemesAnnoSys/docs.min.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'ThemesAnnoSys/bootstrap.min.css' %}"/>
+		<link rel="stylesheet" href="text/css" href="{% static 'ThemesAnnoSys/font-awesome.css' %}"/>
+		<link rel="stylesheet" href="{% static 'ThemesAnnoSys/style.css' %}"/>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script src="http://malsup.github.com/jquery.form.js"></script>
+		<script src="{% static 'ThemesAnnoSys/modernizr.custom.80028.js' %}"></script>
+
+
+		<style>
+			#note {
+				position: absolute;
+				z-index: 6001;
+				top: 0;
+				left: 0;
+				right: 0;
+				background: #fde073;
+				text-align: center;
+				line-height: 2.5;
+				overflow: hidden; 
+				-webkit-box-shadow: 0 0 5px black;
+				-moz-box-shadow:    0 0 5px black;
+				box-shadow:         0 0 5px black;
+			}
+			.cssanimations.csstransforms #note {
+				-webkit-transform: translateY(-50px);
+				-webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
+				-moz-transform:    translateY(-50px);
+				-moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;
+			}
+
+			#close {
+				position: absolute;
+				right: 10px;
+				top: 9px;
+				text-indent: -9999px;
+				background: url(images/close.png);
+				height: 16px;
+				width: 16px;
+				cursor: pointer;
+			}
+			.cssanimations.csstransforms #close {
+				display: none;
+			}
+
+			@-webkit-keyframes slideDown {
+				0%, 100% { -webkit-transform: translateY(-50px); }
+				10%, 90% { -webkit-transform: translateY(0px); }
+			}
+			@-moz-keyframes slideDown {
+				0%, 100% { -moz-transform: translateY(-50px); }
+				10%, 90% { -moz-transform: translateY(0px); }
+			}
+		</style>
+
+
+	</head>
+	<body>
+		<div class="container">      
+			<nav role="navigation" class="navbar navbar-default navbar-fixed-top">        
+			<div class="container-fluid">          
+				<!-- Brand and toggle get grouped for better mobile display -->          
+				<div class="navbar-header">            
+					<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">              
+						<span class="sr-only">Toggle navigation</span>              
+						<span class="icon-bar"></span>              
+						<span class="icon-bar"></span>              
+						<span class="icon-bar"></span>            
+					</button>            
+					<a href={% url 'ThemesAnnoSys:index' %} class="navbar-brand site-title1">通联数据标注</a>          
+				</div>          
+				<!-- Collection of nav links and other content for toggling -->          
+				<div id="navbarCollapse" class="collapse navbar-collapse">            
+					<ul id="site-nav" class="nav navbar-nav nav-pills navbar-right">              
+						<li class="active"><a href="http://www.datayes.com/">首页</a></li>              
+						<li><a href="http://www.datayes.com/">反馈建议</a></li>                              
+						{% if user %}
+						<li><a href="{% url 'login' %}">{{user}}</a></li>
+						{% else %}
+							<li><a href="{% url 'login' %}">登录</a></li>                          
+						{% endif %}
+						<li><a href="{% url 'logout' %}">登出</a></li>
+					</ul>          
+				</div>        
+			</div>      
+			</nav>    
+		</div>
+
+		<br><br><br>
+		<!--<h3> Datag 任务</h3>-->
+		<div id="main" class="container">
+			<div id="content-sidebar-wrap">
+				<div id="content">
+					<div class="breadcrumb">
+
+						{% block path %}{% endblock %}
+
+					</div>
+
+					{% block discription %}{% endblock %}
+					{% block content %}{% endblock %}
+
+					{% block process %}{% endblock %}
+				</div> <!-- #content -->
+				<aside id="sidebar-primary" role="complementary">
+				{% block side %}{% endblock %}
+
+				</aside>
+			</div> <!-- #content-sidebar -->
+		</div> <!-- #main -->
+
+
+	</body>
+</html>
+

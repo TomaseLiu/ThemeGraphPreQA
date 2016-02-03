@@ -1,0 +1,155 @@
+{% extends "ThemesAnnoSys/base_task.html" %}
+
+{% block title %}
+{{theme_name}}关键词
+{% endblock %}
+
+{% block path %}
+<li>
+<a href="#">任务列表</a>
+</li>
+<li>
+<a href="{% url 'ThemesAnnoSys:outline' %}">主题列表</a>
+</li>
+<li>
+<a class="active">
+	主题关键词
+	</li>
+	{% endblock %}
+
+	{% block discription %}
+	<h3>主题: {{theme_name}} </h3>
+	<p>主题描述： {{theme_desc}} </p>
+	<hr>
+	<div id="note">
+		{% if messages %}
+		<ul class="messages">
+			{% for msg in messages %}
+			<li>
+			<div class="alert-{{msg.level_tag}}" role="alert">
+				{{msg.message}}
+			</div>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	{% endblock %}
+
+
+
+	{% block content %}
+
+	<style type="text/css">
+		added {background-color: yellow}
+		delete {background-color: #ffd700}
+		highlight_comm {background-color: #ffff00}
+		highlight_zheshang {background-color: #ff8c00}
+		highlight_comp {background-color: #ffc0cb}
+
+		@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 30px;
+			background-color: #f0f0f0;
+		}
+
+
+		.highlights, textarea {
+			padding: 10px;
+			font: 20px/28px 'Open Sans', sans-serif;
+			letter-spacing: 1px;
+		}
+
+		.backdrop {
+			position: absolute;
+			z-index: 1;
+			border: 2px solid #685972;
+			background-color: #fff;
+			overflow: auto;
+			pointer-events: none;
+			transition: transform 1s;
+		}
+
+		.highlights {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+			color: transparent;
+		}
+
+		mark {
+			border-radius: 3px;
+			color: transparent;
+			background-color: #b1d5e5;
+		}
+
+		.perspective .backdrop {
+			transform:
+			perspective(1500px)
+			translateX(-125px)
+			rotateY(45deg)
+			scale(.9);
+		}
+
+		.perspective textarea {
+			transform:
+			perspective(1500px)
+			translateX(155px)
+			rotateY(45deg)
+			scale(1.1);
+		}
+
+		textarea:focus, button:focus {
+			outline: none;
+			box-shadow: 0 0 0 2px #c6aada;
+		}
+
+
+
+	</style>
+
+
+	{% if keywords_list %}
+	<ul>
+		<div class="row">
+			<div class="col-md-4">
+				<h4>浙商提议</h4>
+				<form action="" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="keywords_source" id="keywords_source" value="zheshang"/>
+					<textarea name="keywords_text" id="keywords_text" rows="18" cols="30">{{keywords_zheshang}}</textarea>
+					<br>
+					<input type="submit" class="btn btn-primary" value="提交修改"/>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<h4>研报提取</h4>
+				<form action="" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="keywords_source" id="keywords_source" value="research"/>
+					<textarea name="keywords_text" id="keywords_text" rows="18" cols="30">{{keywords_research}}</textarea>
+					<br>
+					<input type="submit" class="btn btn-primary" value="提交修改"/>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<h4>新闻提取</h4>
+				<form action="" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="keywords_source" id="keywords_source" value="news"/>
+					<textarea name="keywords_text" id="keywords_text" rows="18" cols="30">{{keywords_news}}</textarea>
+					<br>
+					<input type="submit" class="btn btn-primary" value="提交修改"/>
+				</form>
+			</div>
+		</div>
+	</ul>
+	{% else %}
+	<p> {{theme_name}} have no keywords yet.</p>
+	{% endif %}
+
+		{% endblock %}

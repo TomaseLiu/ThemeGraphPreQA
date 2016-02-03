@@ -1,0 +1,176 @@
+{% extends "ThemesAnnoSys/base_task.html" %} 
+
+
+{% block title %}
+   {{theme_name}}主题
+{% endblock %}
+	{% block path %}
+		<li>
+			<a href="#">任务列表</a>
+		</li>
+		<li>
+			<a href="{% url 'ThemesAnnoSys:outline' %}">主题列表</a>
+		</li>
+		<li class="active">
+			文本关联
+		</li>
+	{% endblock %}
+
+	{% block discription %}
+	<h2> 主题: {{theme_name}}</h2>
+	<hr>
+	<div>颜色含义：&nbsp<highlight_zheshang>浙商</highlight_zheshang>&nbsp<highlight_resh>研报</highlight_resh>&nbsp<highlight_comp>公司</highlight_comp>&nbsp<highlight_comm>新闻</highlight_comm></div>
+	<hr>
+	<div id="note">
+		{% if messages %}
+		<ul class="messages">
+			{% for msg in messages %}
+			<li>
+			<!--<div class="alert alert-{{msg.level_tag}}" role="alert">-->
+				<div class="alert-{{msg.level_tag}}" role="alert">
+				{{msg.message}}
+			</div>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	{% endblock %}
+	{% block content %}
+	<style type="text/css">
+		highlight {background-color: yellow}
+		highlight_resh {background-color: #ffd700}
+		highlight_comm {background-color: #ffff00}
+		highlight_zheshang {background-color: #ff8c00}
+		highlight_comp {background-color: #ffc0cb}
+		form {padding: 20%}
+	</style>
+		{% for article in paginator_article_list %}
+		<div class="row" id={{article.index}}>
+			<div class="col-md-9">
+				<div class="archive">
+					<div id="archives">
+						<header class="entry-header">
+							<div class="entry-info">
+								<div class="row">
+									<div class="col-md-8">
+										<h3 class="entry-title">{{article.title}}</h3>
+									</div>
+									<div class="col-md-4">
+										{% if this_page_remarked %}
+											<span class="btn btn-primary btn-sm">本篇我已标注</span>
+										{% endif %}
+										<a class="btn btn-success btn-sm" href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id next_unremarked_page_id %}" data-toggle="tooltip" title="click">下一篇未标注</a>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<span class="entry-date">
+											<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+											{{article.pub_time_src}}
+										</span>
+										<span class="author vcard">
+											<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+											{{ article.file_name}}
+										</span>
+									</div>
+								
+								</div>
+
+							</div>
+						</header>
+						<br><br>
+						<div>
+							{{ article.body|safe }}
+							<div class="clearfix"></div>
+						</div><!-- .entry-content -->
+						<footer class="entry-meta"></footer>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<!--翻页-->
+				<p align="center">
+				{% if paginator_article_list.has_previous %}
+				<a class="btn btn-warning btn-sm" href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id paginator_article_list.previous_page_number %}">Prev</a>
+				{% endif %}
+				{# topics.paginator.number_pages 返回总页数 #}
+				{{ paginator_article_list.number }} / {{ paginator_article_list.paginator.num_pages }}.
+				{% if paginator_article_list.has_next %}
+				<a class="btn btn-success btn-sm" href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id  paginator_article_list.next_page_number %}">Next</a>
+				{% endif %}
+				</p>
+				<!-- 进度条 -->
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ process_pencentage }}%;">
+						<span class="sr-only">完成</span>
+					</div>
+				</div>
+				<hr>
+					<form action="" method="post">
+						{% csrf_token %}
+						<input type="hidden" name="version_id" id="version_id" value="{{ version_id }}"/>
+						<input type="hidden" name="news_id" id="news_id" value="{{ article.news_id }}"/>
+
+						<input type="radio" name="choice" id="choice1" value="Strong" checked="checked"/>
+						<label for="choice1">强关联</label><br/>
+						<input type="radio" name="choice" id="choice2" value="Weak" />
+						<label for="choice2">弱关联</label><br/>
+						<input type="radio" name="choice" id="choice3" value="Not" />
+						<label for="choice3">不关联</label><br/><br/>
+
+						<div class="input-group">
+							<!--<span class="input-group-addon">Add good words</span>-->
+							<label for="add_words">添加</label>
+							<input type="text" class="form-control" name="add_words" id="add_words" placeholder="good words">
+						</div><br>
+						<div class="input-group">
+							<label for="del_words">删除</label>
+							<input type="text" class="form-control" name="del_words" id="del_words" placeholder="bad words">
+						</div>
+						<br><br>
+						<div class="input-group">
+							<label for="comment">标注意见</label>
+							<input type="text" class="form-control" name="comment" id="comment" placeholder="comment" style="width:200px; height:50px;"/>
+						</div><br><br><br>
+						<!--<input type="submit" class="btn btn-primary btn-sm" data-toggle="modal" value="提交" data-target="#myModal"/>-->
+						<input type="submit" class="btn btn-primary btn-sm" value="提交"/>
+
+				</form>
+			</div>
+		</div>
+		<hr>
+		{% endfor %}
+		<!--
+		<p>
+		{# topics.paginator.page_range 这个函数返回包含一个所有页码数的 range 对象 #}
+		{# 即 range(1, topics.paginator.num_pages + 1) #}
+		{% for page_number in paginator_article_list.paginator.page_range %}
+	{% ifequal page_number  paginator_article_list.number %}
+	{{ page_number }}
+	{% else %}
+	<a href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id page_number %}">{{ page_number }}</a>
+	{% endifequal %}
+	{% endfor %}
+	</p>-->
+	<!-- 另一种分页显示方式 -->
+	<!--
+	<p>
+		{% if paginator_article_list.has_previous %}
+		<a href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id paginator_article_list.previous_page_number %}">Previous</a>
+		{% endif %}
+		{# topics.paginator.number_pages 返回总页数 #}
+		Page {{ paginator_article_list.number }} of {{ paginator_article_list.paginator.num_pages }}.
+		{% if paginator_article_list.has_next %}
+		<a href="{% url 'ThemesAnnoSys:article_anno' theme_name version_id paginator_article_list.next_page_number %}">Next</a>
+		{% endif %}
+		</p>
+		-->
+		<p>
+		标注说明：请标注本篇新闻与主题的关联程度，添加你认为好的关键词（可选），删除你认为不好的关键词（可选）。<br>添加或删除的词之
+		间用空格分割。<br>
+		谢谢。
+		</p>
+
+		{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends "tagtask/base_task.html" %}
+
+{% block title %}
+	{{theme_name}}个股
+{% endblock %}
+
+{% block path %}
+	<li>
+		<a href="{% url 'tagtask:theme-text' %}">任务列表</a>
+	</li>
+	<li>
+		<a href="{% url 'tagtask:theme-text' %}">主题列表</a>
+	</li>
+	<li>
+		<a class="active">
+		主题个股
+	</li>
+{% endblock %}
+
+{% block discription %}
+	<h4>主题: {{theme_name}} </h4>
+	<hr>
+	<div id="note">
+		{% if messages %}
+		<ul class="messages">
+			{% for msg in messages %}
+			<li>
+				<!--<div class="alert alert-{{msg.level_tag}}" role="alert">-->
+				<div class="alert-{{msg.level_tag}}" role="alert">
+					{{msg.message}}
+				</div>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+{% endblock %}
+
+
+
+{% block content %}
+	<ul>
+		<div class="row">
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>个股名称</th>
+						<th>描述</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if ticker_list %}
+						{% for ticker in ticker_list %}
+							<tr>
+								<td>{{ticker.name}}</td>
+								<td>{{ticker.desc}}</td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+
+	</ul>
+{% endblock %}

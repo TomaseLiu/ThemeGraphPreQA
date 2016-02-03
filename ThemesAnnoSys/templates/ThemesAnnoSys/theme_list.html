@@ -1,0 +1,66 @@
+{% extends "ThemesAnnoSys/base_task.html" %}
+
+{% block title %}
+	Task List
+{% endblock %}
+
+{% block path %}
+	<li>
+		<a href="">任务列表</a>
+	</li>
+	<li class="active">
+		主题列表
+	</li>
+{% endblock %}
+
+{% block distription %}
+<h2> 主题列表：</h2>
+<hr>
+{% endblock %}
+
+
+{% block content %}
+	{% if theme_info_list %}
+	<ul>
+		{% for theme_info in theme_info_list %}
+		<div class="row">
+			<div class="col-md-2">
+				<h4><a href="{% url 'ThemesAnnoSys:article_anno' theme_info.theme_article_anno_info.theme_basic_info.theme_name theme_info.theme_article_anno_info.theme_basic_info.theme_lastest_version 1 %}">{{theme_info.theme_article_anno_info.theme_basic_info.theme_index}}.{{theme_info.theme_article_anno_info.theme_basic_info.theme_name}}    {{theme_info.theme_article_anno_info.theme_basic_info.theme_lastest_version}}</a></h4>
+			</div>
+			<div class="col-md-6">
+				<button type="button" class="btn btn-primary" style="width: 90px">总数: {{theme_info.theme_article_anno_info.theme_basic_info.theme_article_count}}</button>
+				<button type="button" class="btn btn-success" style="width: 110px">已标注次: {{theme_info.theme_article_anno_info.theme_news_anno_count}}</button>
+				<button type="button" class="btn btn-danger" style="width: 110px">准确率: {{theme_info.theme_article_anno_info.theme_anno_accuracy}}%</button>
+				<button type="button" class="btn btn-info" style="width: 110px">我的标注数: {{theme_info.user_theme_anno_count}}</button>
+				<a class="btn btn-warning" style="width: 120px" href="{% url 'ThemesAnnoSys:article_anno' theme_info.theme_article_anno_info.theme_basic_info.theme_name theme_info.theme_article_anno_info.theme_basic_info.theme_lastest_version theme_info.user_theme_last_anno_index %}" data-toggle="tooltip" title="click">我的上次标注</a>
+			</div>
+
+			<div class="col-md-4">
+				<div class="col-md-6">
+					<form action="" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="theme_name" id="theme_name" value="{{ theme_info.theme_article_anno_info.theme_basic_info.theme_name }}"/>
+					<input type="hidden" name="version_id" id="version_id" value="{{ theme_info.theme_article_anno_info.theme_basic_info.theme_lastest_version }}"/>
+						<div class="input-group" id="adv-search">
+							<input type="text" class="form-control" name="key_word" id="key_word" placeholder="输入关键词搜索文本">
+							<div class="input-group-btn">
+								<div class="btn-group" role="group">
+									<input type="submit" class="btn btn-primary" value="搜索"/>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-6">
+					<a class="btn btn-success" href="{% url 'ThemesAnnoSys:theme_keywords' theme_info.theme_article_anno_info.theme_basic_info.theme_name theme_info.theme_article_anno_info.theme_basic_info.theme_lastest_version %}" data-toggle="tooltip" title="click">关键词</a>
+					<a class="btn btn-danger" href="#" data-toggle="tooltip" title="click">个股</a>
+				</div>
+			</div>
+		</div>
+		<hr>
+		{% endfor %}
+	</ul>
+	{% else %}
+	<p> Have no theme-text marking task now. </p>
+	{% endif %}
+{% endblock %}
